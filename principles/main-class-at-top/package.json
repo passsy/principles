@@ -1,4 +1,7 @@
 {
   "name": "main-class-at-top",
-  "private": true
+  "private": true,
+  "tags": [
+    "dart"
+  ]
 }

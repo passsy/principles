@@ -1,4 +1,7 @@
 {
   "name": "write-markdown",
-  "private": true
+  "private": true,
+  "tags": [
+    "markdown"
+  ]
 }

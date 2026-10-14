@@ -3,5 +3,9 @@
   "private": true,
   "dependencies": {
     "dart-kit": "*"
-  }
+  },
+  "tags": [
+    "yaml",
+    "dart"
+  ]
 }

@@ -1,4 +1,7 @@
 {
   "name": "internal-functions-close-to-callers",
-  "private": true
+  "private": true,
+  "tags": [
+    "dart"
+  ]
 }

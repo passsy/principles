@@ -1,4 +1,7 @@
 {
   "name": "file-naming",
-  "private": true
+  "private": true,
+  "tags": [
+    "dart"
+  ]
 }

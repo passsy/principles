@@ -1,4 +1,7 @@
 {
   "name": "prefer-union-over-enum",
-  "private": true
+  "private": true,
+  "tags": [
+    "typescript"
+  ]
 }
