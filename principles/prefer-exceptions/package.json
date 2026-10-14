@@ -1,0 +1,7 @@
+{
+  "name": "prefer-exceptions",
+  "private": true,
+  "dependencies": {
+    "dart-kit": "*"
+  }
+}

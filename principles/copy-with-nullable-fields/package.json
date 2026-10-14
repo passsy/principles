@@ -1,0 +1,7 @@
+{
+  "name": "copy-with-nullable-fields",
+  "private": true,
+  "dependencies": {
+    "dart-kit": "*"
+  }
+}

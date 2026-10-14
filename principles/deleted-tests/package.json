@@ -1,0 +1,7 @@
+{
+  "name": "deleted-tests",
+  "private": true,
+  "dependencies": {
+    "dart-kit": "*"
+  }
+}

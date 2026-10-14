@@ -1,0 +1,7 @@
+{
+  "name": "avoid-stringly-typed",
+  "private": true,
+  "dependencies": {
+    "dart-kit": "*"
+  }
+}

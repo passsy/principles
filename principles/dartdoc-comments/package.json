@@ -1,0 +1,7 @@
+{
+  "name": "dartdoc-comments",
+  "private": true,
+  "dependencies": {
+    "dart-kit": "*"
+  }
+}

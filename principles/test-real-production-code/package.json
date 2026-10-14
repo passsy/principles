@@ -1,0 +1,7 @@
+{
+  "name": "test-real-production-code",
+  "private": true,
+  "dependencies": {
+    "dart-kit": "*"
+  }
+}

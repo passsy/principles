@@ -1,0 +1,7 @@
+{
+  "name": "avoid-clean-architecture",
+  "private": true,
+  "dependencies": {
+    "dart-kit": "*"
+  }
+}

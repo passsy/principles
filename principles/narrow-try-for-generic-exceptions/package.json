@@ -1,0 +1,7 @@
+{
+  "name": "narrow-try-for-generic-exceptions",
+  "private": true,
+  "dependencies": {
+    "dart-kit": "*"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "name": "control-flow-keywords-own-line",
+  "private": true,
+  "dependencies": {
+    "dart-kit": "*"
+  }
+}

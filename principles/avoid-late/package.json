@@ -1,0 +1,7 @@
+{
+  "name": "avoid-late",
+  "private": true,
+  "dependencies": {
+    "dart-kit": "*"
+  }
+}

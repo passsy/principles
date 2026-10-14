@@ -1,0 +1,7 @@
+{
+  "name": "extract-only-stable-concepts",
+  "private": true,
+  "dependencies": {
+    "dart-kit": "*"
+  }
+}

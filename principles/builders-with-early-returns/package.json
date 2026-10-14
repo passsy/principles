@@ -1,0 +1,7 @@
+{
+  "name": "builders-with-early-returns",
+  "private": true,
+  "dependencies": {
+    "dart-kit": "*"
+  }
+}

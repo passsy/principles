@@ -1,0 +1,7 @@
+{
+  "name": "avoid-if-case",
+  "private": true,
+  "dependencies": {
+    "dart-kit": "*"
+  }
+}

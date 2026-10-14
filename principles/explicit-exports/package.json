@@ -1,0 +1,7 @@
+{
+  "name": "explicit-exports",
+  "private": true,
+  "dependencies": {
+    "dart-kit": "*"
+  }
+}

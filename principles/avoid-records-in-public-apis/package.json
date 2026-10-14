@@ -1,0 +1,7 @@
+{
+  "name": "avoid-records-in-public-apis",
+  "private": true,
+  "dependencies": {
+    "dart-kit": "*"
+  }
+}

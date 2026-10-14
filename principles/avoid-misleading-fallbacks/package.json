@@ -1,0 +1,7 @@
+{
+  "name": "avoid-misleading-fallbacks",
+  "private": true,
+  "dependencies": {
+    "dart-kit": "*"
+  }
+}

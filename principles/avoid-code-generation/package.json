@@ -1,0 +1,7 @@
+{
+  "name": "avoid-code-generation",
+  "private": true,
+  "dependencies": {
+    "dart-kit": "*"
+  }
+}

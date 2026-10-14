@@ -1,0 +1,7 @@
+{
+  "name": "rekord-pattern",
+  "private": true,
+  "dependencies": {
+    "dart-kit": "*"
+  }
+}

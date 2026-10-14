@@ -1,0 +1,7 @@
+{
+  "name": "prefer-fakes",
+  "private": true,
+  "dependencies": {
+    "dart-kit": "*"
+  }
+}

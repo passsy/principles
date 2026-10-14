@@ -1,0 +1,7 @@
+{
+  "name": "prefer-reactive-forms",
+  "private": true,
+  "dependencies": {
+    "dart-kit": "*"
+  }
+}

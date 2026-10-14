@@ -1,0 +1,7 @@
+{
+  "name": "favor-composition",
+  "private": true,
+  "dependencies": {
+    "dart-kit": "*"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "name": "use-clock",
+  "private": true,
+  "dependencies": {
+    "dart-kit": "*"
+  }
+}

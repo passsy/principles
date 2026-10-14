@@ -1,0 +1,7 @@
+{
+  "name": "prefer-debuggable-code",
+  "private": true,
+  "dependencies": {
+    "dart-kit": "*"
+  }
+}

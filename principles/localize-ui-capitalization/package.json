@@ -1,0 +1,7 @@
+{
+  "name": "localize-ui-capitalization",
+  "private": true,
+  "dependencies": {
+    "dart-kit": "*"
+  }
+}

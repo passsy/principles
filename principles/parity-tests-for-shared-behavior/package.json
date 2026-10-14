@@ -1,0 +1,7 @@
+{
+  "name": "parity-tests-for-shared-behavior",
+  "private": true,
+  "dependencies": {
+    "dart-kit": "*"
+  }
+}

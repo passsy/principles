@@ -1,0 +1,7 @@
+{
+  "name": "prefer-deep-pick-for-json-parsing",
+  "private": true,
+  "dependencies": {
+    "dart-kit": "*"
+  }
+}

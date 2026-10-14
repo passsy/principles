@@ -1,0 +1,7 @@
+{
+  "name": "avoid-setup-teardown",
+  "private": true,
+  "dependencies": {
+    "dart-kit": "*"
+  }
+}

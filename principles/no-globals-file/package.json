@@ -1,0 +1,7 @@
+{
+  "name": "no-globals-file",
+  "private": true,
+  "dependencies": {
+    "dart-kit": "*"
+  }
+}

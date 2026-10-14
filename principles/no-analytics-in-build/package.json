@@ -1,0 +1,7 @@
+{
+  "name": "no-analytics-in-build",
+  "private": true,
+  "dependencies": {
+    "dart-kit": "*"
+  }
+}

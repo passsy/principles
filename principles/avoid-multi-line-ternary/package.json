@@ -1,0 +1,7 @@
+{
+  "name": "avoid-multi-line-ternary",
+  "private": true,
+  "dependencies": {
+    "dart-kit": "*"
+  }
+}

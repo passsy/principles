@@ -1,0 +1,7 @@
+{
+  "name": "package-imports",
+  "private": true,
+  "dependencies": {
+    "dart-kit": "*"
+  }
+}

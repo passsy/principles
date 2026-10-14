@@ -1,0 +1,7 @@
+{
+  "name": "prefer-timer-over-future-delayed",
+  "private": true,
+  "dependencies": {
+    "dart-kit": "*"
+  }
+}

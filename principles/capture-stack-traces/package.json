@@ -1,0 +1,7 @@
+{
+  "name": "capture-stack-traces",
+  "private": true,
+  "dependencies": {
+    "dart-kit": "*"
+  }
+}

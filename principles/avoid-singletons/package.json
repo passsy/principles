@@ -1,0 +1,7 @@
+{
+  "name": "avoid-singletons",
+  "private": true,
+  "dependencies": {
+    "dart-kit": "*"
+  }
+}

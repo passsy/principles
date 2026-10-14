@@ -1,0 +1,7 @@
+{
+  "name": "name-page-widgets",
+  "private": true,
+  "dependencies": {
+    "dart-kit": "*"
+  }
+}

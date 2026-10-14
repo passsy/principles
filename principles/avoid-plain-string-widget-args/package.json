@@ -1,0 +1,7 @@
+{
+  "name": "avoid-plain-string-widget-args",
+  "private": true,
+  "dependencies": {
+    "dart-kit": "*"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "name": "extract-widgets",
+  "private": true,
+  "dependencies": {
+    "dart-kit": "*"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "name": "prevent-reassignment",
+  "private": true,
+  "dependencies": {
+    "dart-kit": "*"
+  }
+}

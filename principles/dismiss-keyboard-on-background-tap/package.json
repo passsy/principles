@@ -1,0 +1,7 @@
+{
+  "name": "dismiss-keyboard-on-background-tap",
+  "private": true,
+  "dependencies": {
+    "dart-kit": "*"
+  }
+}

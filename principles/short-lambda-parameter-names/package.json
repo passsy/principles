@@ -1,0 +1,7 @@
+{
+  "name": "short-lambda-parameter-names",
+  "private": true,
+  "dependencies": {
+    "dart-kit": "*"
+  }
+}

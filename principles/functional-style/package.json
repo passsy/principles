@@ -1,0 +1,7 @@
+{
+  "name": "functional-style",
+  "private": true,
+  "dependencies": {
+    "dart-kit": "*"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "name": "stateful-widget-organization",
+  "private": true,
+  "dependencies": {
+    "dart-kit": "*"
+  }
+}

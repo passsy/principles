@@ -1,0 +1,7 @@
+{
+  "name": "use-signals",
+  "private": true,
+  "dependencies": {
+    "dart-kit": "*"
+  }
+}

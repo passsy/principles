@@ -1,0 +1,7 @@
+{
+  "name": "test-pages-in-the-full-app",
+  "private": true,
+  "dependencies": {
+    "dart-kit": "*"
+  }
+}

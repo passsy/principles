@@ -1,0 +1,7 @@
+{
+  "name": "logging",
+  "private": true,
+  "dependencies": {
+    "dart-kit": "*"
+  }
+}

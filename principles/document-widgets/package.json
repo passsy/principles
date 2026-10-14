@@ -1,0 +1,7 @@
+{
+  "name": "document-widgets",
+  "private": true,
+  "dependencies": {
+    "dart-kit": "*"
+  }
+}

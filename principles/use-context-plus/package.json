@@ -1,0 +1,7 @@
+{
+  "name": "use-context-plus",
+  "private": true,
+  "dependencies": {
+    "dart-kit": "*"
+  }
+}

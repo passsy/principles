@@ -1,0 +1,7 @@
+{
+  "name": "avoid-circular-feature-dependencies",
+  "private": true,
+  "dependencies": {
+    "dart-kit": "*"
+  }
+}

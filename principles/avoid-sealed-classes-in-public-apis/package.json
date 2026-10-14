@@ -1,0 +1,7 @@
+{
+  "name": "avoid-sealed-classes-in-public-apis",
+  "private": true,
+  "dependencies": {
+    "dart-kit": "*"
+  }
+}

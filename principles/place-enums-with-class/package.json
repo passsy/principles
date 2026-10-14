@@ -1,0 +1,7 @@
+{
+  "name": "place-enums-with-class",
+  "private": true,
+  "dependencies": {
+    "dart-kit": "*"
+  }
+}

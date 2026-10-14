@@ -1,0 +1,7 @@
+{
+  "name": "immutable-public-results",
+  "private": true,
+  "dependencies": {
+    "dart-kit": "*"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "name": "use-provider",
+  "private": true,
+  "dependencies": {
+    "dart-kit": "*"
+  }
+}

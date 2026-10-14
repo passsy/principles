@@ -1,0 +1,7 @@
+{
+  "name": "avoid-bloc",
+  "private": true,
+  "dependencies": {
+    "dart-kit": "*"
+  }
+}

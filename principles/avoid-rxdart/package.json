@@ -1,0 +1,7 @@
+{
+  "name": "avoid-rxdart",
+  "private": true,
+  "dependencies": {
+    "dart-kit": "*"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "name": "top-level-private-functions",
+  "private": true,
+  "dependencies": {
+    "dart-kit": "*"
+  }
+}

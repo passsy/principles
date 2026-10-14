@@ -1,0 +1,7 @@
+{
+  "name": "prefer-curly-braces-over-arrow",
+  "private": true,
+  "dependencies": {
+    "dart-kit": "*"
+  }
+}

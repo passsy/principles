@@ -13,6 +13,7 @@ principles/
     principle.md        the advice
     detector.ts         when it applies
     detector.test.ts    what the detector fires on, and what it stays quiet on
+    package.json        the packages the detector imports
 packages/
   dart-kit/             what the Dart detectors share
 collections.json        which principles form the Dart and the Flutter collection
@@ -20,7 +21,7 @@ collections.json        which principles form the Dart and the Flutter collectio
 
 Every folder below `principles/` is one principle, named after the folder.
 A detector imports the Well Actually SDK and, where it helps, `dart-kit`.
-The root `package.json` names `dart-kit` once, for all of them.
+Each principle has a `package.json` that names what its detector imports.
 
 ## Work on a principle
 

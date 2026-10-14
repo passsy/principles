@@ -1,0 +1,7 @@
+{
+  "name": "one-question-per-if",
+  "private": true,
+  "dependencies": {
+    "dart-kit": "*"
+  }
+}

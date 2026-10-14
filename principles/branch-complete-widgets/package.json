@@ -1,0 +1,7 @@
+{
+  "name": "branch-complete-widgets",
+  "private": true,
+  "dependencies": {
+    "dart-kit": "*"
+  }
+}

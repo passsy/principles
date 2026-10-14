@@ -1,0 +1,7 @@
+{
+  "name": "early-returns",
+  "private": true,
+  "dependencies": {
+    "dart-kit": "*"
+  }
+}

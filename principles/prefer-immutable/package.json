@@ -1,0 +1,7 @@
+{
+  "name": "prefer-immutable",
+  "private": true,
+  "dependencies": {
+    "dart-kit": "*"
+  }
+}

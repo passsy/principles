@@ -1,0 +1,7 @@
+{
+  "name": "use-lint",
+  "private": true,
+  "dependencies": {
+    "dart-kit": "*"
+  }
+}
