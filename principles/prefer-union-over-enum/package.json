@@ -2,6 +2,7 @@
   "name": "prefer-union-over-enum",
   "private": true,
   "tags": [
-    "typescript"
+    "typescript",
+    "enum"
   ]
 }
