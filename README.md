@@ -60,3 +60,8 @@ The registry then reads it on every push: it builds and tests the principles who
 
 It is TypeScript without a build step.
 The detector build compiles it together with the detector.
+
+## Licence
+
+Principle texts: all rights reserved by Pascal Welsch. Detector code: MIT. Usable through Well Actually per its terms.
+`packages/dart-kit` is MIT, see its `LICENSE`.
