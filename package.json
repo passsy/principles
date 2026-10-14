@@ -1,0 +1,22 @@
+{
+  "name": "principles",
+  "private": true,
+  "type": "module",
+  "description": "Pascal Welsch's principles for Well Actually, and the packages their detectors share.",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "dart-kit": "*"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "@wellactually/sdk": "github:passsy/wellactually#sdk",
+    "typescript": "^5.9.0",
+    "vitest": "^4.1.0"
+  }
+}
