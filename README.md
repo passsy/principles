@@ -16,7 +16,6 @@ principles/
     package.json        the packages the detector imports
 packages/
   dart-kit/             what the Dart detectors share
-collections.json        which principles form the Dart and the Flutter collection
 ```
 
 Every folder below `principles/` is one principle, named after the folder.
