@@ -1,7 +1,5 @@
 {
   "name": "avoid-misleading-fallbacks",
   "private": true,
-  "dependencies": {
-    "dart-kit": "*"
-  }
+  "retired": "Kept as a reference without a detector. Whether a fallback misleads depends on how its value is read further on, which a scan of the written lines cannot see, so it kept firing on code that reports its errors honestly."
 }
