@@ -1,10 +1,11 @@
 import { mentioned, onPrompt, onWrite } from "@wellactually/sdk/v3";
-import { DART } from "dart-kit";
+import { DART, isDartProject } from "dart-kit";
 
 onPrompt({
   *detect(event) {
-    // Names only Dart has, so the prompt is about Dart without a pubspec.yaml to say so.
-    yield* mentioned(event, ["copyWith"]);
+    if (isDartProject(event)) {
+      yield* mentioned(event, ["copyWith"]);
+    }
   },
 });
 

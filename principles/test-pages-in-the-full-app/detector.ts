@@ -19,17 +19,27 @@ onPrompt({
  *
  * Scoped to the whole file rather than the written line: the wrapper and the
  * page under test are usually a screenful apart.
+ *
+ * Any other tester.pumpWidget in a widget test only points at the principle:
+ * it may pump a leaf widget, which is fine, or a page the detector cannot see.
  */
 onWrite({
   globs: DART_TESTS,
   *detect(event) {
     // A page being constructed, e.g. `const CameraPage()` or `SettingsScreen(id: x)`.
-    if (!event.lines.some((code) => /\b[A-Z]\w*(?:Page|Screen)\s*\(/.test(code))) {
-      return;
-    }
+    const constructsPage = event.lines.some((code) => /\b[A-Z]\w*(?:Page|Screen)\s*\(/.test(code));
+    const hasWidgetTest = event.lines.some((code) => calls(code, ["testWidgets"]));
     for (const written of event.written) {
-      if (calls(written.text, ["MaterialApp", "CupertinoApp", "WidgetsApp"])) {
-        yield { line: written.line };
+      if (constructsPage) {
+        if (calls(written.text, ["MaterialApp", "CupertinoApp", "WidgetsApp"])) {
+          yield { line: written.line };
+          continue;
+        }
+      }
+      if (hasWidgetTest) {
+        if (written.text.includes("tester.pumpWidget(")) {
+          yield { line: written.line, match: "tester.pumpWidget", depth: "pointer" };
+        }
       }
     }
   },

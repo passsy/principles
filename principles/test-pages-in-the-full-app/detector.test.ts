@@ -26,8 +26,26 @@ test("fires on an app wrapper around a *Screen too", () => {
   ]);
 });
 
-test("stays quiet on an app wrapper around a leaf widget", () => {
-  expect(detect(write("test/save_button_test.dart", harness("SaveButton")))).toEqual([]);
+test("only points at the principle on an app wrapper around a leaf widget", () => {
+  expect(detect(write("test/save_button_test.dart", harness("SaveButton")))).toEqual([
+    { line: 5, match: "tester.pumpWidget", depth: "pointer" },
+  ]);
+});
+
+test("points at the principle on a tester.pumpWidget in a widget test", () => {
+  const code = source`
+    void main() {
+      testWidgets('shows the name', (tester) async {
+        await tester.pumpWidget(const NameTag(name: 'Ada'));
+      });
+    }
+  `;
+  expect(detect(write("test/name_tag_test.dart", code))).toEqual([{ line: 3, match: "tester.pumpWidget", depth: "pointer" }]);
+});
+
+test("stays quiet on a tester.pumpWidget outside a widget test", () => {
+  const code = "Future<void> pumpApp(WidgetTester tester) => tester.pumpWidget(const App());";
+  expect(detect(write("test/helpers/pump_app.dart", code))).toEqual([]);
 });
 
 test("stays quiet on the app building its own pages", () => {
