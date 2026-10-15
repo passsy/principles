@@ -64,6 +64,10 @@ test("points at the principle when the user mentions dartx", () => {
   expect(detect(prompt("Can we add dartx for sortedBy?"), dartApp)).toEqual([{ match: "dartx", depth: "pointer" }]);
 });
 
+test("points at the principle on the same words without a pubspec.yaml", () => {
+  expect(detect(prompt("Can we add dartx for sortedBy?"))).toEqual([{ match: "dartx", depth: "pointer" }]);
+});
+
 test("stays quiet on a prompt about something else", () => {
   expect(detect(prompt("Sort the users by name"), dartApp)).toEqual([]);
 });

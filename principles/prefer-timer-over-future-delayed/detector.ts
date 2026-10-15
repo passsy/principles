@@ -1,11 +1,10 @@
 import { mentioned, onPrompt, onWrite } from "@wellactually/sdk/v3";
-import { DART_WITHOUT_TESTS, isDartProject } from "dart-kit";
+import { DART_WITHOUT_TESTS } from "dart-kit";
 
 onPrompt({
   *detect(event) {
-    if (isDartProject(event)) {
-      yield* mentioned(event, ["Future.delayed"]);
-    }
+    // Names only Dart has, so the prompt is about Dart without a pubspec.yaml to say so.
+    yield* mentioned(event, ["Future.delayed"]);
   },
 });
 

@@ -51,6 +51,10 @@ test("points at the principle when the user mentions dartz", () => {
   expect(detect(prompt("Let's use dartz for error handling"), dartApp)).toEqual([{ match: "dartz", depth: "pointer" }]);
 });
 
+test("points at the principle on the same words without a pubspec.yaml", () => {
+  expect(detect(prompt("Let's use dartz for error handling"))).toEqual([{ match: "dartz", depth: "pointer" }]);
+});
+
 test("stays quiet on the word either", () => {
   expect(detect(prompt("Either approach works for me"), dartApp)).toEqual([]);
 });

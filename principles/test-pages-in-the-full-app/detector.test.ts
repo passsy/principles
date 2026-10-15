@@ -48,6 +48,6 @@ test("points at the principle when the user asks for a widget test in a Dart pro
   expect(detect(prompt("Write a widget test for the settings page"), dartApp)).toEqual([{ match: "widget test", depth: "pointer" }]);
 });
 
-test("stays quiet outside a Dart project", () => {
-  expect(detect(prompt("Write a widget test for the settings page"))).toEqual([]);
+test("points at the principle without a pubspec.yaml", () => {
+  expect(detect(prompt("Write a widget test for the settings page"))).toEqual([{ match: "widget test", depth: "pointer" }]);
 });

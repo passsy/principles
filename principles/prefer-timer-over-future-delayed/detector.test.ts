@@ -54,6 +54,10 @@ test("points at the principle when the user mentions Future.delayed in a Dart pr
   expect(detect(prompt("Show the banner after a Future.delayed of two seconds"), dartApp)).toEqual([{ match: "Future.delayed", depth: "pointer" }]);
 });
 
+test("points at the principle on the same words without a pubspec.yaml", () => {
+  expect(detect(prompt("Show the banner after a Future.delayed of two seconds"))).toEqual([{ match: "Future.delayed", depth: "pointer" }]);
+});
+
 test("stays quiet on a prompt about something else", () => {
   expect(detect(prompt("Show the banner after two seconds"), dartApp)).toEqual([]);
 });

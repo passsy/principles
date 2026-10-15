@@ -1,11 +1,10 @@
 import { mentioned, onPrompt, onWrite } from "@wellactually/sdk/v3";
-import { calls, DART_TESTS, isDartProject } from "dart-kit";
+import { calls, DART_TESTS } from "dart-kit";
 
 onPrompt({
   *detect(event) {
-    if (isDartProject(event)) {
-      yield* mentioned(event, ["pumpWidget", "widget test", "widget tests"]);
-    }
+    // Flutter's own words, so the prompt is about Flutter without a pubspec.yaml to say so.
+    yield* mentioned(event, ["pumpWidget", "widget test", "widget tests"]);
   },
 });
 

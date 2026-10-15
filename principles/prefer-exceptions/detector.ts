@@ -1,12 +1,11 @@
 import { mentioned, onPrompt, onWrite } from "@wellactually/sdk/v3";
-import { addsDependency, DART, isDartProject, PUBSPEC } from "dart-kit";
+import { addsDependency, DART, PUBSPEC } from "dart-kit";
 
 // Deliberately not "either": too common in prose to be a signal.
 onPrompt({
   *detect(event) {
-    if (isDartProject(event)) {
-      yield* mentioned(event, ["dartz", "fpdart"]);
-    }
+    // Names only Dart has, so the prompt is about Dart without a pubspec.yaml to say so.
+    yield* mentioned(event, ["dartz", "fpdart"]);
   },
 });
 

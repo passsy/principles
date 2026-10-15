@@ -64,6 +64,6 @@ test("points at the principle when the user mentions copyWith", () => {
   expect(detect(prompt("Add a copyWith to Profile"), dartApp)).toEqual([{ match: "copyWith", depth: "pointer" }]);
 });
 
-test("stays quiet on the same words outside a Dart project", () => {
-  expect(detect(prompt("Add a copyWith to Profile"))).toEqual([]);
+test("points at the principle on the same words without a pubspec.yaml", () => {
+  expect(detect(prompt("Add a copyWith to Profile"))).toEqual([{ match: "copyWith", depth: "pointer" }]);
 });
