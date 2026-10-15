@@ -38,8 +38,8 @@ test("points at the principle when the user mentions fakeAsync in a Dart project
   expect(detect(prompt("The expiry test is flaky, can you wrap it in fakeAsync?"), dartApp)).toEqual([{ match: "fakeAsync", depth: "pointer" }]);
 });
 
-test("stays quiet on the same words outside a Dart project", () => {
-  expect(detect(prompt("The expiry test is flaky, can you wrap it in fakeAsync?"))).toEqual([]);
+test("points at the principle on the same words without a pubspec.yaml", () => {
+  expect(detect(prompt("The expiry test is flaky, can you wrap it in fakeAsync?"))).toEqual([{ match: "fakeAsync", depth: "pointer" }]);
 });
 
 test("stays quiet on a prompt about something else", () => {
