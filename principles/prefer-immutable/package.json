@@ -5,6 +5,7 @@
     "dart-kit": "*"
   },
   "tags": [
-    "dart"
+    "dart",
+    "flutter"
   ]
 }

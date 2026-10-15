@@ -5,7 +5,7 @@
     "dart-kit": "*"
   },
   "tags": [
-    "dart",
+    "flutter",
     "pub-deps"
   ]
 }
