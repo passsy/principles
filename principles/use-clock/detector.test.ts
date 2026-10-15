@@ -32,16 +32,35 @@ test("stays quiet in generated code", () => {
   expect(detect(write("lib/session.g.dart", "final created = DateTime.now();"))).toEqual([]);
 });
 
-const dartApp = { project: "fixtures/dart_app" };
+const expiry = source`
+  void main() {
+    test('expires after an hour', () {
+      fakeAsync((async) {
+        final session = Session.start();
+        async.elapse(const Duration(hours: 1));
+        expect(session.expired, isTrue);
+      });
+    });
+  }
+`;
 
-test("points at the principle when the user mentions fakeAsync in a Dart project", () => {
-  expect(detect(prompt("The expiry test is flaky, can you wrap it in fakeAsync?"), dartApp)).toEqual([{ match: "fakeAsync", depth: "pointer" }]);
+test("points at the principle on a fakeAsync the agent writes into a test", () => {
+  expect(detect(write("test/session_test.dart", expiry))).toEqual([{ line: 3, match: "fakeAsync", depth: "pointer" }]);
 });
 
-test("points at the principle on the same words without a pubspec.yaml", () => {
-  expect(detect(prompt("The expiry test is flaky, can you wrap it in fakeAsync?"))).toEqual([{ match: "fakeAsync", depth: "pointer" }]);
+test("points at the principle on a withClock the agent writes into a test", () => {
+  const code = "  withClock(Clock.fixed(DateTime(2026)), () => expect(session.expired, isFalse));";
+  expect(detect(write("test/session_test.dart", code))).toEqual([{ line: 1, match: "withClock", depth: "pointer" }]);
 });
 
-test("stays quiet on a prompt about something else", () => {
-  expect(detect(prompt("What time zone does the server log in?"), dartApp)).toEqual([]);
+test("stays quiet on a fakeAsync outside a test", () => {
+  expect(detect(write("lib/clock_helpers.dart", "final run = fakeAsync;\nvoid go() => fakeAsync((async) {});"))).toEqual([]);
+});
+
+test("stays quiet on a fakeAsync that was already in the test", () => {
+  expect(detect(edit("test/session_test.dart", expiry, { written: "        expect(session.expired, isTrue);" }))).toEqual([]);
+});
+
+test("stays quiet when the user only mentions fakeAsync", () => {
+  expect(detect(prompt("The expiry test is flaky, can you wrap it in fakeAsync?"), { project: "fixtures/dart_app" })).toEqual([]);
 });
