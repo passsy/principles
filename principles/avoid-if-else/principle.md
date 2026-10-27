@@ -1,45 +1,42 @@
-# Avoid If-Else Statements
+# Flatten Nested Conditional Work
 
-Prefer switch, polymorphism, collection functions or early returns over if-else, and keep if-else for two equally weighted branches.
+Resolve failed prerequisites and already-completed cases before the main operation, so the main operation can be read straight through.
 
-Using `if-else` statements can lead to deeply nested and hard-to-read code. Instead, prefer:
+This principle addresses nested conditional work.
+Leave already-flat conditionals unchanged.
 
-- `switch` statements for multiple conditions
-- Polymorphism or strategy patterns
-- Functional programming constructs (`map`, `where`, `fold`)
-- Early returns to reduce nesting
+Before changing a conditional, identify the main operation and the cases that prevent or complete it.
+Apply this principle when moving those cases out removes a level of nesting from substantial work.
+Do not invent a preferred path between two alternative implementations.
 
-These approaches result in cleaner, more maintainable code.
-
-## When If-Else Is Appropriate
-
-Use `if-else` when both branches are equally weighted or likely. Early returns are better for guard clauses or error handling, not for equally valid code paths.
+Preserve behavior, including work that must run after either branch.
 
 ```dart
-// Good: equally weighted branches use if-else
-if (package.isFlutterPackage) {
-  return flutter(args);
-} else {
-  return dart(args);
+// Before: the main operation sits inside prerequisite checks.
+void submit(Order? order, User? user) {
+  if (order != null) {
+    if (user != null) {
+      saveOrder(order, user);
+      sendConfirmation(order);
+    } else {
+      showLoginRequired();
+    }
+  } else {
+    showMissingOrder();
+  }
 }
 
-// Good: guard clause uses early return
-if (user == null) {
-  return ErrorWidget();
+// After: each rejection finishes before the main operation starts.
+void submit(Order? order, User? user) {
+  if (order == null) {
+    showMissingOrder();
+    return;
+  }
+  if (user == null) {
+    showLoginRequired();
+    return;
+  }
+  saveOrder(order, user);
+  sendConfirmation(order);
 }
-return UserProfile(user);
 ```
-
-The mistake to watch for is turning a symmetric fork into a fake guard:
-
-```dart
-// Bad: neither branch is an edge case, but one is dressed up as one
-if (isBackgroundIsolate) {
-  ping();
-  return;
-}
-routeToInstance();
-```
-
-Two isolates, two equally valid paths.
-The reader has to notice a bare `return` to see that they are alternatives.
