@@ -1,4 +1,7 @@
 {
   "name": "canonical-log-lines",
-  "private": true
+  "private": true,
+  "tags": [
+    "logging"
+  ]
 }

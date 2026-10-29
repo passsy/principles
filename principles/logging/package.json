@@ -6,6 +6,7 @@
   },
   "tags": [
     "dart",
-    "flutter"
+    "flutter",
+    "logging"
   ]
 }
