@@ -5,6 +5,9 @@ In Flutter widget tests, select widgets with spot (`spot<SaveButton>()`, `spotTe
 `find.byType`, `find.text` and `find.byKey` describe one widget each, and every relation between them is another nested `find.descendant`.
 [spot](https://pub.dev/packages/spot) describes the same lookup as a chain that reads like the widget tree, and checks it with an assertion that says what it found when it fails.
 
+Spot ships an agent skill, [spot-testing](https://github.com/passsy/spot/tree/main/skills/spot-testing), with the selectors, assertions, interactions and debugging steps in detail.
+Install it or read it before converting a test.
+
 ## Why
 
 - **Chains read like the tree.**
@@ -24,6 +27,7 @@ In Flutter widget tests, select widgets with spot (`spot<SaveButton>()`, `spotTe
 - Add `spot` as a dev dependency and import `package:spot/spot.dart`.
 - Select by type with `spot<SaveButton>()`, by text with `spotText('Saved')`, by icon with `spotIcon(Icons.add)`.
 - Narrow with a chain, `spot<AlertDialog>().spotText('Delete')`, instead of `find.descendant`.
+- Narrow duplicates by a meaningful parent or child, not with `.first()`.
 - Assert on the selector with `.existsOnce()`, `.doesNotExist()` or `.existsAtLeastOnce()`.
 - Interact with `act.tap(...)` and `act.enterText(...)`.
 
