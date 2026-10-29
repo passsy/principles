@@ -1,0 +1,12 @@
+{
+  "name": "use-spot-instead-of-finders",
+  "private": true,
+  "dependencies": {
+    "dart-kit": "*"
+  },
+  "tags": [
+    "flutter",
+    "widget-tests",
+    "spot"
+  ]
+}

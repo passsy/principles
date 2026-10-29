@@ -3,7 +3,7 @@
 Pascal Welsch's principles for [Well Actually](https://wellactually.dev), and the packages their detectors share.
 
 A principle is advice for a coding agent, with a detector that decides when the advice is relevant.
-There are 81 of them here, 80 for Dart and Flutter and one for TypeScript.
+There are 82 of them here, 81 for Dart and Flutter and one for TypeScript.
 
 ## Layout
 
