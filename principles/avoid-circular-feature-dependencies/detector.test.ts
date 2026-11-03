@@ -38,3 +38,13 @@ test("stays quiet when the agent only reads the file", () => {
 test("stays quiet on dart: imports", () => {
   expect(detect(write("lib/checkout/checkout_controller.dart", "import 'dart:async';\n"), shop)).toEqual([]);
 });
+
+test("stays quiet on a doc import back to a file that imports this one", () => {
+  const code = "/// @docImport 'package:shop/cart/cart_controller.dart';\nlibrary;\n\nclass CheckoutController {}";
+  expect(detect(write("lib/checkout/checkout_controller.dart", code), shop)).toEqual([]);
+});
+
+test("stays quiet when the other file only doc-imports this one", () => {
+  const code = "import 'package:shop/cart/cart_docs.dart';\n\nclass CheckoutController {}";
+  expect(detect(write("lib/checkout/checkout_controller.dart", code), shop)).toEqual([]);
+});

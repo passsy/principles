@@ -51,6 +51,25 @@ If the shared piece is small and only two callers exist, inlining beats a third 
 A helper that exists only to break a cycle is refactor scaffolding.
 See [Extract only stable concepts](https://wellactually.dev/p/passsy/extract-only-stable-concepts).
 
+## Fine: doc imports and doc links
+
+A `/// @docImport` is not an import.
+It only lets dartdoc resolve `[Name]` links, so it adds no dependency, and the code still compiles, runs and deletes on its own.
+A shared widget may doc-import the feature that uses it and say so in its comment:
+
+```dart
+// lib/common/widgets/selection_menu.dart
+/// @docImport 'package:shop/checkout/checkout_sort_menu.dart';
+library;
+
+import 'package:flutter/material.dart';
+
+/// Used by [CheckoutSortMenu] in the checkout header.
+class SelectionMenu extends StatelessWidget {}
+```
+
+Count only `import`, `export` and `part` directives when looking for a cycle.
+
 ## The test
 
 Ask whether you could delete one feature without touching the other.
