@@ -5,10 +5,12 @@ import { mentioned, onCommand, onPrompt } from "@wellactually/sdk/v3";
 //
 // "pull request" and "pull requests" are both listed because a word trigger
 // requires the whole word. "pullrequest" is deliberately absent, so the
-// `pull_request:` workflow event does not pull the rule in.
+// `pull_request:` workflow event does not pull the rule in. "PR" is absent
+// too: it turns up in automation prompts and passing mentions far more often
+// than when a description is being written, and `gh pr create` covers that.
 onPrompt({
   *detect(event) {
-    yield* mentioned(event, ["pr", "prs", "pull request", "pull requests"]);
+    yield* mentioned(event, ["pull request", "pull requests"]);
   },
 });
 

@@ -2,14 +2,13 @@ import { expect, test } from "vitest";
 import { command, detect, prompt } from "@wellactually/sdk/v3/test";
 
 test.each([
-  { text: "can you write the PR description", word: "PR" },
   { text: "open a pull request for this", word: "pull request" },
   { text: "I left comments on both pull requests", word: "pull requests" },
 ])("points at the principle on $text", ({ text, word }) => {
   expect(detect(prompt(text))).toEqual([{ match: word, depth: "pointer" }]);
 });
 
-test.each(["the job runs on pull_request", "run the pre-commit hook", "Prüfe das Wetter"])("stays quiet on %s", (text) => {
+test.each(["the job runs on pull_request", "can you write the PR description", "Adjust my write good pr descriptions principle", "check the review-requested-pull-requests automation", "run the pre-commit hook", "Prüfe das Wetter"])("stays quiet on %s", (text) => {
   expect(detect(prompt(text))).toEqual([]);
 });
 
