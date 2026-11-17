@@ -1,5 +1,5 @@
 import { expect, test } from "vitest";
-import { command, detect, prompt, read, write } from "@wellactually/sdk/v3/test";
+import { command, detect, prompt, read, write } from "@wellactually/detector-sdk/v3/test";
 
 const expected = [{ match: "async_return_with_no_await", depth: "pointer" }];
 

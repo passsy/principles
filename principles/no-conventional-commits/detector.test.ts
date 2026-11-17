@@ -1,5 +1,5 @@
 import { expect, test } from "vitest";
-import { command, detect, prompt } from "@wellactually/sdk/v3/test";
+import { command, detect, prompt } from "@wellactually/detector-sdk/v3/test";
 
 test.each([
   { line: `git add lib/auth.dart && git commit -m "feat(auth): add passkey login"`, subject: "feat(auth): add passkey login" },

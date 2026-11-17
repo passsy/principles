@@ -6,7 +6,7 @@
  * line call that function, where does the build method end. The question a
  * principle asks about its own rule stays in its detector.
  */
-import { findUp } from "@wellactually/sdk/v3";
+import { findUp } from "@wellactually/detector-sdk/v3";
 
 /** Every Dart file a person wrote. Generated files are nobody's decision. */
 export const DART: string[] = ["**/*.dart", "!**/*.{g,freezed,gr,config,mocks}.dart"];

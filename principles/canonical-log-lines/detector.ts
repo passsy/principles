@@ -1,4 +1,4 @@
-import { onWrite } from "@wellactually/sdk/v3";
+import { onWrite } from "@wellactually/detector-sdk/v3";
 
 /** A log call: a logger-ish receiver, a level, an open paren. */
 const LOG_CALL = /\b(?:_?log(?:ger|ging)?|console|slog|chirp|timber|developer)\w*\s*\.\s*(?:log|trace|debug|info|warn|warning|error|fatal|severe|fine[rst]*|shout|config|print)\s*\(/i;

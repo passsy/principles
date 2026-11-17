@@ -1,4 +1,4 @@
-import { onWrite } from "@wellactually/sdk/v3";
+import { onWrite } from "@wellactually/detector-sdk/v3";
 import { DART_TESTS, dartCode } from "dart-kit";
 
 /**

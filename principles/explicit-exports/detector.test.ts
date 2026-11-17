@@ -1,5 +1,5 @@
 import { expect, test } from "vitest";
-import { detect, edit, read, write } from "@wellactually/sdk/v3/test";
+import { detect, edit, read, write } from "@wellactually/detector-sdk/v3/test";
 
 const api = "export 'src/logger.dart';\nexport 'src/writer.dart' show Writer;\n";
 

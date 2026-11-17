@@ -1,4 +1,4 @@
-import { mentioned, onPrompt } from "@wellactually/sdk/v3";
+import { mentioned, onPrompt } from "@wellactually/detector-sdk/v3";
 import { isDartProject } from "dart-kit";
 
 /**

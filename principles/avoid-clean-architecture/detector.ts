@@ -1,4 +1,4 @@
-import { mentioned, onPrompt, onRead, onWrite, type File } from "@wellactually/sdk/v3";
+import { mentioned, onPrompt, onRead, onWrite, type File } from "@wellactually/detector-sdk/v3";
 import { DART, isDartProject } from "dart-kit";
 
 // "repository" stays out of the word list, in conversation it almost always

@@ -1,4 +1,4 @@
-import { onWrite } from "@wellactually/sdk/v3";
+import { onWrite } from "@wellactually/detector-sdk/v3";
 
 /**
  * String-building around a url variable: `'...' + url`, `baseUrl + ...`, or

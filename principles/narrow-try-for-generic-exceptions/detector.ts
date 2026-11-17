@@ -1,4 +1,4 @@
-import { type Finding, onWrite, type WrittenLine } from "@wellactually/sdk/v3";
+import { type Finding, onWrite, type WrittenLine } from "@wellactually/detector-sdk/v3";
 import { DART_WITHOUT_TESTS, isComment } from "dart-kit";
 
 /**

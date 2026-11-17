@@ -1,4 +1,4 @@
-import { onWrite } from "@wellactually/sdk/v3";
+import { onWrite } from "@wellactually/detector-sdk/v3";
 
 /**
  * No prompt handler: "timeout" in conversation is a test timeout or a config value

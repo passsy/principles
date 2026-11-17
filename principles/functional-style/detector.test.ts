@@ -1,5 +1,5 @@
 import { expect, test } from "vitest";
-import { detect, edit, prompt, read, source, write } from "@wellactually/sdk/v3/test";
+import { detect, edit, prompt, read, source, write } from "@wellactually/detector-sdk/v3/test";
 
 const loop = source`
   List<String> activeNames(List<User> users) {

@@ -1,4 +1,4 @@
-import { mentioned, onPrompt, onWrite } from "@wellactually/sdk/v3";
+import { mentioned, onPrompt, onWrite } from "@wellactually/detector-sdk/v3";
 import { addsDependency, DART_WITHOUT_TESTS, isDartProject, PUBSPEC } from "dart-kit";
 
 // Not the bare "form": "in the form of" says it too. The plural and the

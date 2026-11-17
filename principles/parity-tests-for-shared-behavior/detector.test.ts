@@ -1,5 +1,5 @@
 import { expect, test } from "vitest";
-import { detect, prompt } from "@wellactually/sdk/v3/test";
+import { detect, prompt } from "@wellactually/detector-sdk/v3/test";
 
 const dartApp = { project: "fixtures/dart_app" };
 

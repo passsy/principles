@@ -1,5 +1,5 @@
 import { expect, test } from "vitest";
-import { detect, prompt, read, source, write } from "@wellactually/sdk/v3/test";
+import { detect, prompt, read, source, write } from "@wellactually/detector-sdk/v3/test";
 
 test("fires on a competing lint package in the pubspec", () => {
   const pubspec = source`

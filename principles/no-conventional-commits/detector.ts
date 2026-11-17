@@ -1,4 +1,4 @@
-import { mentioned, onCommand, onPrompt } from "@wellactually/sdk/v3";
+import { mentioned, onCommand, onPrompt } from "@wellactually/detector-sdk/v3";
 
 // Only speaks when the conventional format actually shows up: as a topic in a
 // prompt, or in the subject about to be committed.

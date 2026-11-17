@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { DART_WITHOUT_TESTS } from "dart-kit";
-import { onWrite } from "@wellactually/sdk/v3";
+import { onWrite } from "@wellactually/detector-sdk/v3";
 
 /**
  * A cycle is invisible in one file; it only exists between two. So the

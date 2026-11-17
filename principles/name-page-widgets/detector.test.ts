@@ -1,5 +1,5 @@
 import { expect, test } from "vitest";
-import { detect, edit, prompt, read, write } from "@wellactually/sdk/v3/test";
+import { detect, edit, prompt, read, write } from "@wellactually/detector-sdk/v3/test";
 
 function widget(declaration: string): string {
   return ["/// The login screen.", declaration, "  const LoginScreen();", "}", ""].join("\n");

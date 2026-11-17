@@ -1,4 +1,4 @@
-import { onWrite } from "@wellactually/sdk/v3";
+import { onWrite } from "@wellactually/detector-sdk/v3";
 import { buildMethodRanges, dartCode, DART } from "dart-kit";
 
 type Branch = { start: number; end: number; line: number; indent: number; alternatives: number; arms: [number, number][]; atFunctionEnd: boolean; scope: number };

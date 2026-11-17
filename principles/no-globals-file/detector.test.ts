@@ -1,5 +1,5 @@
 import { expect, test } from "vitest";
-import { detect, edit, prompt, read, write } from "@wellactually/sdk/v3/test";
+import { detect, edit, prompt, read, write } from "@wellactually/detector-sdk/v3/test";
 
 test.each(["lib/globals.dart", "lib/src/constants.dart", "lib/consts.dart"])("fires when the agent writes %s", (path) => {
   expect(detect(write(path, "const timeout = 30;\n"))).toEqual([{}]);

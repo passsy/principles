@@ -13,7 +13,7 @@
   },
   "devDependencies": {
     "@types/node": "^24.0.0",
-    "@wellactually/sdk": "github:passsy/wellactually#sdk",
+    "@wellactually/detector-sdk": "^0.1.1",
     "typescript": "^5.9.0",
     "vitest": "^4.1.0"
   }

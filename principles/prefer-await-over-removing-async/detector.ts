@@ -1,4 +1,4 @@
-import { onPrompt, onRead, onWrite, type TextFinding } from "@wellactually/sdk/v3";
+import { onPrompt, onRead, onWrite, type TextFinding } from "@wellactually/detector-sdk/v3";
 
 /**
  * The diagnostic itself is enough context: in a prompt, or in a file the

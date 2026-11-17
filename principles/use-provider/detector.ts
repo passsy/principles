@@ -1,4 +1,4 @@
-import { mentioned, onPrompt, onWrite } from "@wellactually/sdk/v3";
+import { mentioned, onPrompt, onWrite } from "@wellactually/detector-sdk/v3";
 import { addsDependency, DART_WITHOUT_TESTS, isDartProject, PUBSPEC } from "dart-kit";
 
 // Not "provider": in conversation that is an auth or cloud provider far

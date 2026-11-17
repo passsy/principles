@@ -1,4 +1,4 @@
-import { onWrite } from "@wellactually/sdk/v3";
+import { onWrite } from "@wellactually/detector-sdk/v3";
 
 /** A class, mixin, enum or extension declared at column 0, with its name captured. */
 const DECLARATION = /^(?:(?:abstract\s+|base\s+|final\s+|sealed\s+|interface\s+|mixin\s+)*class|(?:base\s+)?mixin|enum|extension(?:\s+type)?)\s+(\w+)/;

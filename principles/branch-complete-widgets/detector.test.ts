@@ -1,5 +1,5 @@
 import { expect, test } from "vitest";
-import { detect, edit, read, write } from "@wellactually/sdk/v3/test";
+import { detect, edit, read, write } from "@wellactually/detector-sdk/v3/test";
 
 /** A widget file, so the rule is looking at a widget tree rather than a value object. */
 function widgetFile(body: string[]): string {

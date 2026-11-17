@@ -1,4 +1,4 @@
-import { onWrite, type WrittenLine } from "@wellactually/sdk/v3";
+import { onWrite, type WrittenLine } from "@wellactually/detector-sdk/v3";
 import { DART_TESTS, isComment } from "dart-kit";
 
 /**

@@ -1,4 +1,4 @@
-import { onWrite } from "@wellactually/sdk/v3";
+import { onWrite } from "@wellactually/detector-sdk/v3";
 import { DART_WITHOUT_TESTS } from "dart-kit";
 
 /** A call on something named analytics: `analytics.track(`, `widget.analytics?.logEvent(`, `ref.analytics.screen (`. */

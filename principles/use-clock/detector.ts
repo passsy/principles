@@ -1,4 +1,4 @@
-import { onWrite } from "@wellactually/sdk/v3";
+import { onWrite } from "@wellactually/detector-sdk/v3";
 import { calls, DART, DART_TESTS, isComment } from "dart-kit";
 
 // Only a DateTime.now() the agent writes. Legacy calls are not this change's business.

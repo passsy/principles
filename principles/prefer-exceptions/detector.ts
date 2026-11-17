@@ -1,4 +1,4 @@
-import { mentioned, onPrompt, onWrite } from "@wellactually/sdk/v3";
+import { mentioned, onPrompt, onWrite } from "@wellactually/detector-sdk/v3";
 import { addsDependency, DART, PUBSPEC } from "dart-kit";
 
 // Deliberately not "either": too common in prose to be a signal.

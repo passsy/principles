@@ -1,5 +1,5 @@
 import { expect, test } from "vitest";
-import { detect, edit, read, source, write } from "@wellactually/sdk/v3/test";
+import { detect, edit, read, source, write } from "@wellactually/detector-sdk/v3/test";
 
 test.each(["return Text(context.l10n.save.toUpperCase());", "final tooltip = context.l10n.deleteTooltip.toUpperCase();", "Text(title.toUpperCase()),"])(
   "fires on runtime casing of display text: %s",

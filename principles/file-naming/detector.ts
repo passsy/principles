@@ -1,4 +1,4 @@
-import { type Finding, onWrite } from "@wellactually/sdk/v3";
+import { type Finding, onWrite } from "@wellactually/detector-sdk/v3";
 
 /** A class declaration at the top level, with whatever modifiers it carries. */
 const CLASS = /^(?:abstract\s+|base\s+|final\s+|sealed\s+|interface\s+|mixin\s+)*class\s+(\w+)/;

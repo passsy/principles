@@ -1,5 +1,5 @@
 import { expect, test } from "vitest";
-import { detect, edit, prompt, read, write } from "@wellactually/sdk/v3/test";
+import { detect, edit, prompt, read, write } from "@wellactually/detector-sdk/v3/test";
 
 const imports = "import 'package:flutter_riverpod/flutter_riverpod.dart';\nimport 'package:provider/provider.dart';\n";
 

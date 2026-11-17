@@ -1,5 +1,5 @@
 import { expect, test } from "vitest";
-import { detect, edit, read, source, write } from "@wellactually/sdk/v3/test";
+import { detect, edit, read, source, write } from "@wellactually/detector-sdk/v3/test";
 
 /** A Dart file whose body is `lines`, written by the agent in one write. */
 function sync(lines: string[]): string {

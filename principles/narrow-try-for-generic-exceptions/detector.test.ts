@@ -1,5 +1,5 @@
 import { expect, test } from "vitest";
-import { detect, edit, read, source, write } from "@wellactually/sdk/v3/test";
+import { detect, edit, read, source, write } from "@wellactually/detector-sdk/v3/test";
 
 test("fires on FormatException around a request, a decode and a parse", () => {
   const code = source`

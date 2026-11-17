@@ -1,4 +1,4 @@
-import { mentioned, onCommand, onPrompt } from "@wellactually/sdk/v3";
+import { mentioned, onCommand, onPrompt } from "@wellactually/detector-sdk/v3";
 
 // A word trigger for the user's request. Not a language rule: a PR
 // description reads the same above any diff.
