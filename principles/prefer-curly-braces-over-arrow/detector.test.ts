@@ -26,6 +26,42 @@ test("fires on a dangling arrow inside a method", () => {
   expect(detect(write("lib/names.dart", code))).toEqual([{ line: 4 }]);
 });
 
+test("fires on an arrow whose body starts on the same line and spans several", () => {
+  const code = source`
+    final models = data
+        .map(
+          (item) => DataModel(
+            id: item.id,
+            name: item.name,
+          ),
+        )
+        .toList();
+  `;
+  expect(detect(write("lib/names.dart", code))).toEqual([{ line: 3 }]);
+});
+
+test("stays quiet on an arrow body that closes on its line before more arguments", () => {
+  const code = source`
+    Button(
+      onTap: () => select(item), child: Row(
+        children: [],
+      ),
+    );
+    final label = names.map((n) => '(\${n}').join(', ');
+  `;
+  expect(detect(write("lib/names.dart", code))).toEqual([]);
+});
+
+test("stays quiet on a method whose arrow body is a switch expression", () => {
+  const code = source`
+    Color toColor() => switch (this) {
+          PixelEffectColor.red => const Color(0xFFFF2020),
+          PixelEffectColor.orange => const Color(0xFFFF7800),
+        };
+  `;
+  expect(detect(write("lib/color.dart", code))).toEqual([]);
+});
+
 test("stays quiet on single-line arrows and curly bodies", () => {
   const code = source`
     final doubled = numbers.map((n) => n * 2);
