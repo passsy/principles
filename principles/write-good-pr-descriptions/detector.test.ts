@@ -1,5 +1,5 @@
 import { expect, test } from "vitest";
-import { command, detect, prompt } from "@wellactually/detector-sdk/v3/test";
+import { command, detect, prompt, tool } from "@wellactually/detector-sdk/v5/test";
 
 test.each([
   { text: "open a pull request for this", word: "pull request" },
@@ -21,4 +21,21 @@ test.each([
 
 test.each(["gh pr view 166 --json state", "gh pr checks 166", "printf '%s\\n' 'gh pr create is the documented form'"])("stays quiet on the command %s", (line) => {
   expect(detect(command(line))).toEqual([]);
+});
+
+test.each([
+  { server: "t3-code", name: "pull_request_create", input: { title: "Fix lost lines", body: "Why" } },
+  { server: "github", name: "create_pull_request", input: { title: "Fix lost lines" } },
+  { server: "t3-code", name: "pull_request_update", input: { body: "Why" } },
+  { server: "github", name: "update_pull_request", input: { title: "Fix lost lines" } },
+])("fires in full on the MCP tool $name", ({ server, name, input }) => {
+  expect(detect(tool(server, name, input))).toEqual([{}]);
+});
+
+test.each([
+  { server: "t3-code", name: "pull_request_update", input: { reviewers: ["octocat"] } },
+  { server: "t3-code", name: "pull_request_read", input: { number: 52 } },
+  { server: "t3-code", name: "pull_request_merge", input: { number: 52 } },
+])("stays quiet on the MCP tool $name", ({ server, name, input }) => {
+  expect(detect(tool(server, name, input))).toEqual([]);
 });

@@ -13,7 +13,7 @@
   },
   "devDependencies": {
     "@types/node": "^24.0.0",
-    "@wellactually/detector-sdk": "^0.1.1",
+    "@wellactually/detector-sdk": "^0.2.0",
     "typescript": "^5.9.0",
     "vitest": "^4.1.0"
   }
