@@ -54,3 +54,14 @@ test("points at the principle when the user asks for freezed in a Dart project",
 test("stays quiet on a prompt about something else", () => {
   expect(detect(prompt("Add a name field to the User model"), dartApp)).toEqual([]);
 });
+
+test("finds a name however it is cased or separated", () => {
+  expect(detect(prompt("Should we drop Build-Runner?"), dartApp)).toEqual([{ match: "Build-Runner", depth: "pointer" }]);
+  expect(detect(prompt("Is code\tgeneration worth it here?"), dartApp)).toEqual([{ match: "code\tgeneration", depth: "pointer" }]);
+});
+
+test("reads a long prompt within its time", () => {
+  const log = "INFO request handled in 12ms by the order service\n".repeat(20000);
+  expect(detect(prompt(log), dartApp)).toEqual([]);
+  expect(detect(prompt(`${log}Can we use freezed?`), dartApp)).toEqual([{ match: "freezed", depth: "pointer" }]);
+});
