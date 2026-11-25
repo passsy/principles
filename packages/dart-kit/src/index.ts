@@ -118,93 +118,100 @@ export function buildMethodRanges(lines: string[]): [number, number][] {
  * string has no escapes, and a string in triple quotes spans lines.
  */
 export function dartCode(source: string): string {
-  const out = source.split("");
+  // QuickJS walks every character in a JS loop and in its regex engine alike,
+  // so the scan jumps from one comment or quote to the next with indexOf.
   const n = source.length;
+  const out: string[] = [];
+  let done = 0;
   const blank = (from: number, to: number): void => {
-    for (let k = from; k < to && k < n; k++) {
-      if (out[k] !== "\n") {
-        out[k] = " ";
-      }
-    }
+    const literal = source.slice(from, to);
+    out.push(source.slice(done, from), literal.includes("\n") ? literal.replace(/[^\n]/g, " ") : " ".repeat(literal.length));
+    done = to;
   };
-
-  let i = 0;
-  while (i < n) {
-    const c = source[i];
-    const next = source[i + 1];
-    if (c === "/" && next === "/") {
-      let j = i;
-      while (j < n && source[j] !== "\n") {
-        j++;
+  const find = ahead(source);
+  const openers = ["//", "/*", "'", '"'];
+  while (true) {
+    let at = -1;
+    let kind = "";
+    for (const opener of openers) {
+      const found = find(opener, done);
+      if (found !== -1 && (at === -1 || found < at)) {
+        at = found;
+        kind = opener;
       }
-      blank(i, j);
-      i = j;
-      continue;
     }
-    if (c === "/" && next === "*") {
+    if (at === -1) {
+      break;
+    }
+    if (kind === "//") {
+      const end = source.indexOf("\n", at);
+      blank(at, end === -1 ? n : end);
+    } else if (kind === "/*") {
       // Dart block comments nest.
+      const marks = /\/\*|\*\//g;
+      marks.lastIndex = at + 2;
       let depth = 1;
-      let j = i + 2;
-      while (j < n && depth > 0) {
-        if (source[j] === "/" && source[j + 1] === "*") {
-          depth++;
-          j += 2;
-          continue;
+      let end = n;
+      let mark: RegExpExecArray | null;
+      while ((mark = marks.exec(source)) !== null) {
+        depth += mark[0] === "/*" ? 1 : -1;
+        if (depth === 0) {
+          end = marks.lastIndex;
+          break;
         }
-        if (source[j] === "*" && source[j + 1] === "/") {
-          depth--;
-          j += 2;
-          continue;
-        }
-        j++;
       }
-      blank(i, j);
-      i = j;
-      continue;
+      blank(at, end);
+    } else {
+      const raw = source[at - 1] === "r" && !isIdentChar(source[at - 2]);
+      blank(raw ? at - 1 : at, skipString(source, at, raw, find));
     }
-    if (c === "r" && (next === "'" || next === '"') && !isIdentChar(source[i - 1])) {
-      const j = skipString(source, i + 1, true);
-      blank(i, j);
-      i = j;
-      continue;
-    }
-    if (c === "'" || c === '"') {
-      const j = skipString(source, i, false);
-      blank(i, j);
-      i = j;
-      continue;
-    }
-    i++;
   }
+  out.push(source.slice(done));
   return out.join("");
 }
 
+/**
+ * `indexOf` that remembers where it found each needle. The scan only moves
+ * forward, so a needle far ahead is searched for once, not once per string.
+ */
+type Ahead = (needle: string, from: number) => number;
+
+function ahead(source: string): Ahead {
+  const found = new Map<string, number>();
+  return (needle, from) => {
+    const known = found.get(needle);
+    if (known !== undefined && (known === -1 || known >= from)) {
+      return known;
+    }
+    const at = source.indexOf(needle, from);
+    found.set(needle, at);
+    return at;
+  };
+}
+
 /** Index just past the end of the string literal starting at `start`. */
-function skipString(source: string, start: number, raw: boolean): number {
-  const n = source.length;
-  const quote = source[start];
-  if (quote === undefined) {
-    return n;
-  }
+function skipString(source: string, start: number, raw: boolean, find: Ahead): number {
+  const quote = source[start] ?? "";
   const triple = source[start + 1] === quote && source[start + 2] === quote;
   const delim = triple ? quote.repeat(3) : quote;
   let i = start + delim.length;
-  while (i < n) {
-    const c = source[i];
-    if (!raw && c === "\\") {
-      i += 2;
-      continue;
+  while (true) {
+    const close = source.indexOf(delim, i);
+    // An unterminated single-line string stops at the newline rather than blanking the rest of the file.
+    const newline = triple ? -1 : find("\n", i);
+    const escape = raw ? -1 : find("\\", i);
+    const first = Math.min(...[close, newline, escape].filter((at) => at !== -1));
+    if (first === Infinity) {
+      return source.length;
     }
-    if (!triple && c === "\n") {
-      // An unterminated single-line string stops at the newline rather than blanking the rest of the file.
-      return i;
+    if (first === escape) {
+      i = escape + 2;
+    } else if (first === newline) {
+      return newline;
+    } else {
+      return close + delim.length;
     }
-    if (source.startsWith(delim, i)) {
-      return i + delim.length;
-    }
-    i++;
   }
-  return n;
 }
 function isIdentChar(char: string | undefined): boolean {
   return char !== undefined && /[\p{L}\p{N}_$]/u.test(char);

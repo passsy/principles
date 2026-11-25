@@ -248,3 +248,47 @@ test("guards without alternatives stay quiet", () => {
   `;
   expect(detect(write("lib/guard.dart", code))).toEqual([]);
 });
+
+test("judges an edit in a large file within its time", () => {
+  const one = (i: number) => `void submit${i}(Order? order, User? user) {\n  if (order != null) {\n    if (user != null) {\n      saveOrder(order, user);\n      sendConfirmation(order);\n    } else {\n      showLoginRequired('${i}');\n    }\n  } else {\n    showMissingOrder();\n  }\n}\n`;
+  const code = Array.from({ length: 1500 }, (_, i) => one(i)).join("\n");
+  // The 1001st function starts on line 13001; its else arm is written.
+  expect(detect(edit("lib/orders.dart", code, { written: "showLoginRequired('1000');" }))).toEqual([{ line: 13002, endLine: 13011 }]);
+});
+
+const service = source`
+  @immutable
+  sealed class OrderService {
+    final Api api;
+
+    @override
+    void submit(Order? order, User? user) {
+      if (order != null) {
+        if (user != null) {
+          saveOrder(order, user);
+          sendConfirmation(order);
+        } else {
+          showLoginRequired();
+        }
+      } else {
+        showMissingOrder();
+      }
+    }
+
+    void cancel() => api.cancel();
+  }
+`;
+
+test("judges a method of a class on its own", () => {
+  expect(detect(edit("lib/service.dart", service, { written: "sendConfirmation(order);" }))).toEqual([{ line: 7, endLine: 16 }]);
+});
+
+test("an edit in another member leaves the branch alone", () => {
+  expect(detect(edit("lib/service.dart", service, { written: "void cancel() => api.cancel();" }))).toEqual([]);
+  expect(detect(edit("lib/service.dart", service, { written: "final Api api;" }))).toEqual([]);
+});
+
+test("a line at column 0 inside a multi-line string does not cut its function short", () => {
+  const code = nested.replace("void submit(Order? order, User? user) {\n", "void submit(Order? order, User? user) {\n  final help = '''\nclass Order {\n''';\n");
+  expect(detect(edit("lib/order.dart", code, { written: "    showLoginRequired();" }))).toEqual([{ line: 5, endLine: 14 }]);
+});
