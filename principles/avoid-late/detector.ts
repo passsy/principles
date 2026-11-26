@@ -21,10 +21,30 @@ onPrompt({
 onWrite({
   globs: DART,
   *detect(event) {
+    // Most writes hold no `late`; find those that do before building the code of the whole file.
+    const lates: { line: number; column: number }[] = [];
+    for (const written of event.written) {
+      // A comment is not code the agent wrote.
+      if (!written.text.includes("late") || isComment(written.text)) {
+        continue;
+      }
+      const column = /(?<![\p{L}\p{N}_$.])late(?![\p{L}\p{N}_$])/u.exec(written.text)?.index;
+      if (column !== undefined) {
+        lates.push({ line: written.line, column });
+      }
+    }
+    if (lates.length === 0) {
+      return;
+    }
+
     // Comment lines are blanked at their length, so a brace in a comment
     // opens no scope and every offset stays where it is.
     const codeLines: string[] = [];
+    const lineStarts: number[] = [];
+    let lineStart = 0;
     for (const line of event.lines) {
+      lineStarts.push(lineStart);
+      lineStart += line.length + 1;
       if (isComment(line)) {
         codeLines.push(" ".repeat(line.length));
       } else {
@@ -32,36 +52,44 @@ onWrite({
       }
     }
     const code = codeLines.join("\n");
-    for (const written of event.written) {
-      // A comment is not code the agent wrote.
-      if (isComment(written.text)) {
+    // Found once per write, not once per `late`: on a large file that was most of the time.
+    const classes = classDeclarations(code);
+    const braces = braceDepths(code);
+    for (const { line, column } of lates) {
+      const at = (lineStarts[line - 1] ?? 0) + column;
+      const body = enclosingClass(code, classes, at);
+      const depth = depthAt(braces, at) - (body ? depthAt(braces, body.open + 1) : 0);
+      const late = { at, body, depth };
+      if (isSelfReferentialLocalConstruction(code, late)) {
         continue;
       }
-      const column = /(?<![\p{L}\p{N}_$.])late(?![\p{L}\p{N}_$])/u.exec(written.text)?.index;
-      if (column === undefined) {
+      if (isLazyStateFieldRequiringThis(code, late)) {
         continue;
       }
-      let lineStart = 0;
-      for (const line of event.lines.slice(0, written.line - 1)) {
-        lineStart += line.length + 1;
-      }
-      const lateAt = lineStart + column;
-      if (isSelfReferentialLocalConstruction(code, lateAt)) {
+      if (isLazyBeaconControllerField(code, late)) {
         continue;
       }
-      if (isLazyStateFieldRequiringThis(code, lateAt)) {
+      if (isStateLifecycleField(code, late)) {
         continue;
       }
-      if (isLazyBeaconControllerField(code, lateAt)) {
-        continue;
-      }
-      if (isStateLifecycleField(code, lateAt)) {
-        continue;
-      }
-      yield { line: written.line };
+      yield { line };
     }
   },
 });
+
+interface ClassDeclaration {
+  at: number;
+  open: number;
+  /** Found when a `late` lies after `open`, as most classes never need it. */
+  close?: number;
+}
+
+interface Late {
+  at: number;
+  body: ClassBody | null;
+  /** Brace depth below the class body, or below the file outside a class. */
+  depth: number;
+}
 
 interface ClassBody {
   open: number;
@@ -75,8 +103,9 @@ interface ClassBody {
  * local cycle that cannot be expressed with an ordinary final initializer:
  * the callback needs the value while that value is still being constructed.
  */
-function isSelfReferentialLocalConstruction(code: string, lateAt: number): boolean {
-  if (!isLocal(code, lateAt)) {
+function isSelfReferentialLocalConstruction(code: string, { at: lateAt, depth }: Late): boolean {
+  // Inside a function or block, below its class or the file.
+  if (depth <= 0) {
     return false;
   }
 
@@ -94,13 +123,14 @@ function isSelfReferentialLocalConstruction(code: string, lateAt: number): boole
     return false;
   }
 
-  const afterDeclaration = code.slice(declarationEnd);
-  const assignment = new RegExp(`^\\s*${escapeRegExp(name)}\\s*=(?!=)`).exec(afterDeclaration);
-  if (!assignment) {
+  // Sticky at the end of the declaration instead of a copy of the rest of the file.
+  const assignment = new RegExp(`\\s*${escapeRegExp(name)}\\s*=(?!=)`, "y");
+  assignment.lastIndex = declarationEnd;
+  if (!assignment.test(code)) {
     return false;
   }
 
-  const assignmentAt = declarationEnd + assignment.index;
+  const assignmentAt = declarationEnd;
   const assignmentEnd = statementEnd(code, assignmentAt);
   if (assignmentEnd === -1) {
     return false;
@@ -119,9 +149,8 @@ function isSelfReferentialLocalConstruction(code: string, lateAt: number): boole
  * makes that initializer lazy, which is legitimate for State-owned resources
  * such as `AnimationController(vsync: this)`.
  */
-function isLazyStateFieldRequiringThis(code: string, lateAt: number): boolean {
-  const body = enclosingClass(code, lateAt);
-  if (!body?.isFlutterState || braceDepth(code, body.open + 1, lateAt) !== 0) {
+function isLazyStateFieldRequiringThis(code: string, { at: lateAt, body, depth }: Late): boolean {
+  if (!body?.isFlutterState || depth !== 0) {
     return false;
   }
 
@@ -142,9 +171,8 @@ function isLazyStateFieldRequiringThis(code: string, lateAt: number): boolean {
  * State Beacon controllers own `B` as an instance field. Their beacons must be
  * lazy fields so the initializer can use that group and join its disposal.
  */
-function isLazyBeaconControllerField(code: string, lateAt: number): boolean {
-  const body = enclosingClass(code, lateAt);
-  if (!body?.hasBeaconController || braceDepth(code, body.open + 1, lateAt) !== 0) {
+function isLazyBeaconControllerField(code: string, { at: lateAt, body, depth }: Late): boolean {
+  if (!body?.hasBeaconController || depth !== 0) {
     return false;
   }
 
@@ -166,9 +194,8 @@ function isLazyBeaconControllerField(code: string, lateAt: number): boolean {
  * Flutter runs initState before build, so the field cannot be read early.
  * Not in the handbook runtime, which leaves this exception to the reader.
  */
-function isStateLifecycleField(code: string, lateAt: number): boolean {
-  const body = enclosingClass(code, lateAt);
-  if (!body?.isFlutterState || braceDepth(code, body.open + 1, lateAt) !== 0) {
+function isStateLifecycleField(code: string, { at: lateAt, body, depth }: Late): boolean {
+  if (!body?.isFlutterState || depth !== 0) {
     return false;
   }
   const end = statementEnd(code, lateAt);
@@ -196,38 +223,59 @@ function isStateLifecycleField(code: string, lateAt: number): boolean {
   return new RegExp(`(?<![\\w$])${escapeRegExp(name)}\\s*=(?!=)`).test(classCode.slice(open, close));
 }
 
-function isLocal(code: string, offset: number): boolean {
-  const body = enclosingClass(code, offset);
-  if (body) {
-    return braceDepth(code, body.open + 1, offset) > 0;
+function classDeclarations(code: string): ClassDeclaration[] {
+  const classes: ClassDeclaration[] = [];
+  for (const match of code.matchAll(/\bclass\s+[A-Za-z_$][\w$]*/g)) {
+    const at = match.index ?? -1;
+    classes.push({ at, open: code.indexOf("{", at) });
   }
-  return braceDepth(code, 0, offset) > 0;
+  return classes;
 }
 
-function enclosingClass(code: string, offset: number): ClassBody | null {
-  let innermost: ClassBody | null = null;
-  const declaration = /\bclass\s+[A-Za-z_$][\w$]*/g;
-  for (const match of code.matchAll(declaration)) {
-    const at = match.index ?? -1;
-    const open = code.indexOf("{", at);
-    if (open === -1 || open > offset) {
-      continue;
+function enclosingClass(code: string, classes: ClassDeclaration[], offset: number): ClassBody | null {
+  // Classes come in order of their braces, so the innermost one around the
+  // offset is the first that still encloses it, looking back from the offset.
+  let index = lastOpenBefore(classes, offset);
+  for (; index >= 0; index--) {
+    const declaration = classes[index] as ClassDeclaration;
+    declaration.close ??= matchingBrace(code, declaration.open);
+    if (declaration.close !== -1 && offset < declaration.close) {
+      break;
     }
-    const close = matchingBrace(code, open);
-    if (close === -1 || offset >= close) {
-      continue;
-    }
-    if (innermost && open <= innermost.open) {
-      continue;
-    }
-    innermost = {
-      open,
-      close,
-      isFlutterState: /\bextends\s+State\s*(?:<[^{}]*>)?/.test(code.slice(at, open)),
-      hasBeaconController: /\bwith\b[^{}]*\bBeaconController(?:Mixin)?\b/.test(code.slice(at, open)),
-    };
   }
-  return innermost;
+  if (index < 0) {
+    return null;
+  }
+  const close = classes[index]?.close ?? -1;
+  // Of declarations that share one brace, the first names the class.
+  while (index > 0 && classes[index - 1]?.open === classes[index]?.open) {
+    index--;
+  }
+  const innermost = classes[index] as ClassDeclaration;
+  const header = code.slice(innermost.at, innermost.open);
+  return {
+    open: innermost.open,
+    close,
+    isFlutterState: /\bextends\s+State\s*(?:<[^{}]*>)?/.test(header),
+    hasBeaconController: /\bwith\b[^{}]*\bBeaconController(?:Mixin)?\b/.test(header),
+  };
+}
+
+/** Index of the last class that opens at or before `offset`, by binary search, or -1. */
+function lastOpenBefore(classes: ClassDeclaration[], offset: number): number {
+  let low = 0;
+  let high = classes.length;
+  while (low < high) {
+    const middle = (low + high) >> 1;
+    const open = classes[middle]?.open ?? -1;
+    // A class with no brace after it has none after any later class either.
+    if (open !== -1 && open <= offset) {
+      low = middle + 1;
+    } else {
+      high = middle;
+    }
+  }
+  return low - 1;
 }
 
 function callbackCaptures(initializer: string, name: string): boolean {
@@ -370,22 +418,27 @@ function statementEnd(code: string, from: number): number {
   return -1;
 }
 
+// Hops from brace to brace with indexOf: a loop over every character is slow in the sandbox.
 function matchingBrace(code: string, open: number): number {
   let depth = 0;
-  for (let i = open; i < code.length; i++) {
-    switch (code[i]) {
-      case "{":
-        depth++;
-        break;
-      case "}":
-        depth--;
-        if (depth === 0) {
-          return i;
-        }
-        break;
+  let at = open;
+  while (true) {
+    const nextOpen = code.indexOf("{", at);
+    const nextClose = code.indexOf("}", at);
+    if (nextClose === -1) {
+      return -1;
+    }
+    if (nextOpen !== -1 && nextOpen < nextClose) {
+      depth++;
+      at = nextOpen + 1;
+    } else {
+      depth--;
+      if (depth === 0) {
+        return nextClose;
+      }
+      at = nextClose + 1;
     }
   }
-  return -1;
 }
 
 function matchingOpenParen(code: string, close: number): number {
@@ -406,19 +459,47 @@ function matchingOpenParen(code: string, close: number): number {
   return -1;
 }
 
-function braceDepth(code: string, from: number, to: number): number {
+interface BraceDepths {
+  /** Offsets of the braces in the code, in order. */
+  at: number[];
+  /** Depth just after each of those braces. */
+  depth: number[];
+}
+
+// Counted once per write: counting from the start for each `late` was most of the time on large files.
+function braceDepths(code: string): BraceDepths {
+  const braces: BraceDepths = { at: [], depth: [] };
   let depth = 0;
-  for (let i = from; i < to; i++) {
-    switch (code[i]) {
-      case "{":
-        depth++;
-        break;
-      case "}":
-        depth--;
-        break;
+  let nextOpen = code.indexOf("{");
+  let nextClose = code.indexOf("}");
+  while (nextOpen !== -1 || nextClose !== -1) {
+    if (nextClose === -1 || (nextOpen !== -1 && nextOpen < nextClose)) {
+      depth++;
+      braces.at.push(nextOpen);
+      nextOpen = code.indexOf("{", nextOpen + 1);
+    } else {
+      depth--;
+      braces.at.push(nextClose);
+      nextClose = code.indexOf("}", nextClose + 1);
+    }
+    braces.depth.push(depth);
+  }
+  return braces;
+}
+
+/** Depth of the braces before `offset`, by binary search. */
+function depthAt(braces: BraceDepths, offset: number): number {
+  let low = 0;
+  let high = braces.at.length;
+  while (low < high) {
+    const middle = (low + high) >> 1;
+    if ((braces.at[middle] ?? 0) < offset) {
+      low = middle + 1;
+    } else {
+      high = middle;
     }
   }
-  return depth;
+  return low === 0 ? 0 : (braces.depth[low - 1] ?? 0);
 }
 
 function previousNonSpace(code: string, from: number): number {
