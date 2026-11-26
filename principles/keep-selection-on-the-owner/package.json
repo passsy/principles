@@ -1,0 +1,11 @@
+{
+  "name": "keep-selection-on-the-owner",
+  "private": true,
+  "dependencies": {
+    "dart-kit": "*"
+  },
+  "tags": [
+    "dart",
+    "typescript"
+  ]
+}
