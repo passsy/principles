@@ -49,6 +49,38 @@ test("fires on isSelected in a type alias held in a readonly array", () => {
   expect(detect(write("src/table.tsx", code))).toEqual([{ line: 3, match: "isSelected" }]);
 });
 
+test("fires on a Dart field typed with a selection enum of the same file", () => {
+  const code = source`
+    enum MarkerState { selected, unselected }
+
+    class ScanMarker {
+      ScanMarker({required this.id, this.state = MarkerState.unselected});
+
+      final String id;
+      final MarkerState state;
+    }
+
+    class ScanMapModel {
+      final List<ScanMarker> _allMarkers = [];
+    }
+  `;
+  expect(detect(write("lib/scan_map_model.dart", code))).toEqual([{ line: 7, match: "MarkerState" }]);
+});
+
+test("stays quiet on a Dart field typed with an enum without a selection value", () => {
+  const code = source`
+    enum TicketStatus { open, inProgress, done }
+
+    class Ticket {
+      final String id;
+      final TicketStatus status;
+    }
+
+    final List<Ticket> tickets = [];
+  `;
+  expect(detect(write("lib/ticket.dart", code))).toEqual([]);
+});
+
 test("fires when the agent adds the flag to a file that already holds the list", () => {
   const updated = finding.replace("  description: string;\n", "  description: string;\n  accepted: boolean;\n");
   expect(detect(edit("src/records.ts", updated, { written: "  accepted: boolean;" }))).toEqual([{ line: 4, match: "accepted" }]);

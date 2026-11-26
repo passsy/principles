@@ -6,20 +6,26 @@ import { DART } from "dart-kit";
 const PICK = "(?:is)?(?:[Rr]ecommended|[Ss]elected|[Dd]efault|[Pp]rimary|[Cc]urrent|[Aa]ccepted|[Cc]hosen|[Pp]referred)";
 const DART_FLAG = new RegExp(`^\\s*(?:final\\s+|late\\s+)*bool\\??\\s+(${PICK})\\s*[;=]`);
 const TS_FLAG = new RegExp(`^\\s*(?:readonly\\s+)?(${PICK})\\??\\s*:\\s*boolean\\s*[;,]?\\s*$`);
+// A field typed with an enum of the same file that has a `selected` value,
+// like `MarkerState state` beside `enum MarkerState { selected, unselected }`.
+const DART_TYPED_FIELD = /^\s*(?:final\s+|late\s+)*([A-Z]\w*)\??\s+\w+\s*[;=]/;
+const ENUM = /\benum\s+(\w+)\s*\{([^;}]*)/g;
+const PICK_VALUE = /\b(?:recommended|selected|primary|current|accepted|chosen|preferred)\b/;
 const TYPE = /^(\s*)(?:export\s+)?(?:(?:abstract|final|sealed|base|declare)\s+)*(?:class|interface|type)\s+([A-Za-z_$][\w$]*)(.*)$/;
 
 /**
  * A pick flag declared on a type that the same file also holds in a
  * collection: `bool isDefault` on Address beside `List<Address>`, or
- * `recommended?: boolean` on Fix beside `Fix[]`. Without the collection the
+ * `recommended?: boolean` on Fix beside `Fix[]`, or in Dart a field typed
+ * with a selection enum. Without the collection the
  * type is not clearly a list item, so the detector stays quiet. Widgets take
  * `selected` as an input from the owner and are left alone.
  */
-function* flags(event: WriteEvent, flag: RegExp) {
+function* flags(event: WriteEvent, flag: (text: string) => string | undefined) {
   const collected = new Map<string, boolean>();
   for (const written of event.written) {
-    const field = flag.exec(written.text);
-    if (!field) {
+    const match = flag(written.text);
+    if (!match) {
       continue;
     }
     const owner = enclosingType(event.lines, written.line - 1);
@@ -30,9 +36,25 @@ function* flags(event: WriteEvent, flag: RegExp) {
       collected.set(owner.name, inCollection(event.text, owner.name));
     }
     if (collected.get(owner.name)) {
-      yield { line: written.line, match: field[1] };
+      yield { line: written.line, match };
     }
   }
+}
+
+function dartFlag(event: WriteEvent) {
+  let pickEnums: Set<string> | undefined;
+  return (text: string) => {
+    const flag = DART_FLAG.exec(text);
+    if (flag) {
+      return flag[1];
+    }
+    const typed = DART_TYPED_FIELD.exec(text);
+    if (!typed) {
+      return undefined;
+    }
+    pickEnums ??= new Set([...event.text.matchAll(ENUM)].filter((e) => PICK_VALUE.test(e[2]!)).map((e) => e[1]!));
+    return pickEnums.has(typed[1]!) ? typed[1] : undefined;
+  };
 }
 
 function enclosingType(lines: readonly string[], index: number) {
@@ -54,13 +76,13 @@ function inCollection(text: string, name: string) {
 onWrite({
   globs: DART,
   *detect(event) {
-    yield* flags(event, DART_FLAG);
+    yield* flags(event, dartFlag(event));
   },
 });
 
 onWrite({
   globs: ["**/*.{ts,tsx,mts,cts}", "!**/*.d.{ts,mts,cts}"],
   *detect(event) {
-    yield* flags(event, TS_FLAG);
+    yield* flags(event, (text) => TS_FLAG.exec(text)?.[1]);
   },
 });

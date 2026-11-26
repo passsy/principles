@@ -9,6 +9,9 @@ Then a second one cannot exist, there is no "at most one" check to write, and ch
 The same holds for multi-selection: keep the selection as a set on the owner, not an `isSelected` flag on each item.
 The selection is cleared or replaced in one write, and the same items can be selected differently in two places (two views, two users) at once.
 
+A state enum with a `selected` value on each item, like `enum MarkerState { selected, unselected }`, is the same flag in disguise.
+When the owner also keeps the selected list, every selection change has to loop over all items to keep the two in sync.
+
 Either way the items can stay immutable.
 Picking or selecting one changes only the owner, so no item is copied or mutated to flip a flag, and an item shared by several owners is never touched by one of them.
 
